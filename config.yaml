@@ -1,11 +1,24 @@
 # config file for LLM Processing in project "Aldersbach Digital"
 # Author: Max Vogeltanz, University of Graz, 2026
 
-provider: anthropic   # anthropic | openai | mistral | gemini
+provider: vllm   # anthropic | openai | vllm (OpenAI-compatible) | mistral | gemini
+
+providers:
+  # Cloud OpenAI — leave base_url unset to use api.openai.com
+  openai:
+    base_url: null
+    api_key: ""
+  # Institutional / local vLLM (OpenAI-compatible HTTP API, not OpenAI the vendor)
+  vllm:
+    base_url: http://localhost:8080/v1
+    api_key: ""
+    extra_body:
+      chat_template_kwargs:
+        enable_thinking: false
 
 paths:
-  input_json: data/JSONtoRDF/plaintextentries_346 - Kopie.json # input file path
-  output_rdf: output/JSONtoRDF/{PROVIDER}/raw/plaintextentries_346-Test{MODEL}.xml # only for JSONtoRDF
+  input_json: data/JSONtoRDF/plaintextentries_L346-Test.json # small example (4 entries)
+  output_rdf: output/JSONtoRDF/{PROVIDER}/raw/plaintextentries_L346-Test{MODEL}.xml
   system_prompt: data/JSONtoRDF/prompts/systemprompt.txt # path to system prompt
 
 run:
@@ -14,7 +27,7 @@ run:
   retry_backoff_base_seconds: 2 # time delay for retry attempts
 
 generation:
-  model: claude-sonnet-4-5 # use different available models here
+  model: vllm-qwen3.5-397b # vLLM-served model id (do not change if it unloads the server)
   max_tokens: 4096 # define maximum output tokens
   temperature: 0 # temperature 
 

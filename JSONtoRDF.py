@@ -64,6 +64,7 @@ def main():
     gen = cfg["generation"]
     run = cfg["run"]
     cost = cfg.get("cost")
+    total_cost = None
 
     model_name = gen["model"]
     max_tokens = int(gen.get("max_tokens", 4096))
@@ -89,7 +90,7 @@ def main():
     print(f"Output RDF: {output_rdf_path}")
 
     # Create provider client (same interface across providers)
-    client = make_client(provider, cfg) if "cfg" in make_client.__code__.co_varnames else make_client(provider)
+    client = make_client(provider, cfg)
 
     # Load entries (list of dicts)
     entries = load_json_file(input_path)
